@@ -58,8 +58,9 @@
             // 
             this.tsmiGecmisUrunler.Font = new System.Drawing.Font("Arial Narrow", 14.25F, ((System.Drawing.FontStyle)((System.Drawing.FontStyle.Bold | System.Drawing.FontStyle.Italic))), System.Drawing.GraphicsUnit.Point, ((byte)(162)));
             this.tsmiGecmisUrunler.Name = "tsmiGecmisUrunler";
-            this.tsmiGecmisUrunler.Size = new System.Drawing.Size(151, 27);
-            this.tsmiGecmisUrunler.Text = "Geçmiş Sparişler";
+            this.tsmiGecmisUrunler.Size = new System.Drawing.Size(155, 27);
+            this.tsmiGecmisUrunler.Text = "Geçmiş Siparişler";
+            this.tsmiGecmisUrunler.Click += new System.EventHandler(this.tsmiGecmisUrunler_Click);
             // 
             // lvwMasalar
             // 

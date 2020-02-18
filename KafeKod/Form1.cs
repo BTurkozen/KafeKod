@@ -94,5 +94,11 @@ namespace KafeKod
                 }
             }
         }
+
+        private void tsmiGecmisUrunler_Click(object sender, EventArgs e)
+        {
+            var frm = new GecmisSparislerForm(db);
+            frm.ShowDialog();
+        }
     }
 }

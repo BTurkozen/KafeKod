@@ -32,12 +32,6 @@
             this.label2 = new System.Windows.Forms.Label();
             this.dgvSiparisler = new System.Windows.Forms.DataGridView();
             this.dgvSiparisDetaylari = new System.Windows.Forms.DataGridView();
-            this.Column1 = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.Column2 = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.Column3 = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.Column4 = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.Column5 = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.Column6 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             ((System.ComponentModel.ISupportInitialize)(this.dgvSiparisler)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.dgvSiparisDetaylari)).BeginInit();
             this.SuspendLayout();
@@ -70,25 +64,25 @@
             this.dgvSiparisler.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.dgvSiparisler.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.AllCells;
+            this.dgvSiparisler.AutoSizeRowsMode = System.Windows.Forms.DataGridViewAutoSizeRowsMode.AllCells;
             this.dgvSiparisler.BackgroundColor = System.Drawing.SystemColors.ControlLightLight;
             this.dgvSiparisler.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
             this.dgvSiparisler.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dgvSiparisler.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
-            this.Column1,
-            this.Column2,
-            this.Column3,
-            this.Column4,
-            this.Column5,
-            this.Column6});
             this.dgvSiparisler.Location = new System.Drawing.Point(16, 35);
             this.dgvSiparisler.Name = "dgvSiparisler";
+            this.dgvSiparisler.ReadOnly = true;
+            this.dgvSiparisler.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
             this.dgvSiparisler.Size = new System.Drawing.Size(799, 213);
             this.dgvSiparisler.TabIndex = 25;
+            this.dgvSiparisler.SelectionChanged += new System.EventHandler(this.dgvSiparisler_SelectionChanged);
             // 
             // dgvSiparisDetaylari
             // 
             this.dgvSiparisDetaylari.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.dgvSiparisDetaylari.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.AllCells;
+            this.dgvSiparisDetaylari.AutoSizeRowsMode = System.Windows.Forms.DataGridViewAutoSizeRowsMode.AllCells;
             this.dgvSiparisDetaylari.BackgroundColor = System.Drawing.SystemColors.ControlLightLight;
             this.dgvSiparisDetaylari.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
             this.dgvSiparisDetaylari.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
@@ -96,36 +90,6 @@
             this.dgvSiparisDetaylari.Name = "dgvSiparisDetaylari";
             this.dgvSiparisDetaylari.Size = new System.Drawing.Size(799, 206);
             this.dgvSiparisDetaylari.TabIndex = 26;
-            // 
-            // Column1
-            // 
-            this.Column1.HeaderText = "MasaNo";
-            this.Column1.Name = "Column1";
-            // 
-            // Column2
-            // 
-            this.Column2.HeaderText = "AcilisZamani";
-            this.Column2.Name = "Column2";
-            // 
-            // Column3
-            // 
-            this.Column3.HeaderText = "KapanisZamani";
-            this.Column3.Name = "Column3";
-            // 
-            // Column4
-            // 
-            this.Column4.HeaderText = "Durum";
-            this.Column4.Name = "Column4";
-            // 
-            // Column5
-            // 
-            this.Column5.HeaderText = "OdenenTutar";
-            this.Column5.Name = "Column5";
-            // 
-            // Column6
-            // 
-            this.Column6.HeaderText = "ToplamTutar";
-            this.Column6.Name = "Column6";
             // 
             // GecmisSparislerForm
             // 
@@ -150,11 +114,5 @@
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.DataGridView dgvSiparisler;
         private System.Windows.Forms.DataGridView dgvSiparisDetaylari;
-        private System.Windows.Forms.DataGridViewTextBoxColumn Column1;
-        private System.Windows.Forms.DataGridViewTextBoxColumn Column2;
-        private System.Windows.Forms.DataGridViewTextBoxColumn Column3;
-        private System.Windows.Forms.DataGridViewTextBoxColumn Column4;
-        private System.Windows.Forms.DataGridViewTextBoxColumn Column5;
-        private System.Windows.Forms.DataGridViewTextBoxColumn Column6;
     }
 }
