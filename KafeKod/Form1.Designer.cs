@@ -71,6 +71,7 @@
             this.lvwMasalar.Size = new System.Drawing.Size(599, 414);
             this.lvwMasalar.TabIndex = 2;
             this.lvwMasalar.UseCompatibleStateImageBehavior = false;
+            this.lvwMasalar.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.lvwMasalar_MouseDoubleClick);
             // 
             // Form1
             // 

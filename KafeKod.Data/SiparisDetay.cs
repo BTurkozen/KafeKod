@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace KafeKod.Data
 {
-    class SiparisDetay
+   public class SiparisDetay
     {
         public string UrunAd { get; set; }
         public decimal BirimFiyat { get; set; }
@@ -17,6 +17,6 @@ namespace KafeKod.Data
         //{
         //    return Adet * BirimFiyat;
         //}
-        public decimal Tutar() => Adet * BirimFiyat;
+        public decimal Tutar() => Adet * BirimFiyat; // Tutar metodumuza hesabı yansıtabılmek ıcın 
     }
 }

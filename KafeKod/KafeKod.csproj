@@ -108,7 +108,16 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Resources\1.png" />
+    <None Include="Resources\masabos.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\masadolu.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\KafeKod.Data\KafeKod.Data.csproj">
+      <Project>{57a81baf-5913-4501-ab7c-7573f45ca0f5}</Project>
+      <Name>KafeKod.Data</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
