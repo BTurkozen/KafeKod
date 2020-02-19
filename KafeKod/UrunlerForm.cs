@@ -1,4 +1,5 @@
-﻿using System;
+﻿using KafeKod.Data;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -12,9 +13,52 @@ namespace KafeKod
 {
     public partial class UrunlerForm : Form
     {
-        public UrunlerForm()
+        KafeVeri db;
+        BindingList<Urun> blUrunler;
+        public UrunlerForm(KafeVeri kafeveri)
         {
+            db = kafeveri;
             InitializeComponent();
+            dgvUrunler.AutoGenerateColumns = false;
+            blUrunler = new BindingList<Urun>(db.Urunler);
+            dgvUrunler.DataSource = blUrunler;
+        }
+
+        private void btnUrunlerEkle_Click(object sender, EventArgs e)
+        {
+            string urunAd = txtUrunlerUrunAdi.Text.Trim();
+            if (urunAd == "")
+            {
+                MessageBox.Show("Lütfen bir ürün adi giriniz.");
+                return;
+            }
+            blUrunler.Add(new Urun
+            {
+                UrunAd = urunAd,
+                BirimFiyat = nudUrunlerBirim.Value
+            });
+            db.Urunler.Sort();
+        }
+
+        private void dgvUrunler_DataError(object sender, DataGridViewDataErrorEventArgs e)
+        {
+            MessageBox.Show("Gecersiz Değer Girdiniz. Lütfen Tekrar giriniz!!!");
+        }
+
+        private void dgvUrunler_CellValidating(object sender, DataGridViewCellValidatingEventArgs e)
+        {
+            if (e.ColumnIndex == 0)
+            {
+                if (e.FormattedValue.ToString().Trim() == "")
+                {
+                    dgvUrunler.Rows[e.RowIndex].ErrorText = "Ürün ad boş geçilemez!";
+                    e.Cancel = true;
+                }
+                else
+                {
+                    dgvUrunler.Rows[e.RowIndex].ErrorText = "";
+                }
+            }
         }
     }
 }

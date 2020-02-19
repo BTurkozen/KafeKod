@@ -13,6 +13,8 @@ namespace KafeKod
 {
     public partial class MasaDetayForm : Form
     {
+        public event EventHandler<MasaTasimaEventArgs> MasaTasindi;
+
         KafeVeri db; // Constructer için field olusturuyoruz.
         Siparis siparis; // Constructer için field olusturuyoruz.
         BindingList<SiparisDetay> blSiparisDetaylar;
@@ -23,12 +25,25 @@ namespace KafeKod
             this.siparis = siparis; // Yukarıda olusturdugumuz fieldleri buraya aktarıyoruz.
             blSiparisDetaylar = new BindingList<SiparisDetay>(siparis.SiparisDeteylar);
             InitializeComponent();
+            MasaNolariniYukle();
             MasaNoGuncelle();
             TutarGuncelle();
-            cboMasaUrun.DataSource = db.Urunler;
+            cboMasaUrun.DataSource = db.Urunler.OrderBy(x => x.UrunAd).ToList(); // combobox'in  property'sinde  combobox sıralama yapabılıyoruz.
             cboMasaUrun.SelectedItem = null;
             dgvSiparisDetaylari.DataSource = blSiparisDetaylar;
 
+        }
+
+        private void MasaNolariniYukle()
+        {
+            cboMasaNo.Items.Clear();
+            for (int i = 1; i <= db.MasaAdet; i++)
+            {
+                if (!db.AktifSiparis.Any(x => x.MasaNo == i))
+                {
+                    cboMasaNo.Items.Add(i);
+                }
+            }
         }
 
         private void TutarGuncelle()
@@ -59,7 +74,7 @@ namespace KafeKod
             blSiparisDetaylar.Add(sd);
             nudMasaAdet.Value = 1;
             TutarGuncelle();
-            
+
         }
 
         private void btnMasaAnaSayfa_Click(object sender, EventArgs e)
@@ -70,8 +85,8 @@ namespace KafeKod
         private void btnMasaSiparisIptal_Click(object sender, EventArgs e)
         {
             siparis.Durum = SiparisDurumu.Iptal;
-            var dr = MessageBox.Show("Sipariş iptal edilecektir Onaylıyor musunuz?", "Sipariş İptal Onayı", MessageBoxButtons.YesNo, 
-                MessageBoxIcon.Warning, 
+            var dr = MessageBox.Show("Sipariş iptal edilecektir Onaylıyor musunuz?", "Sipariş İptal Onayı", MessageBoxButtons.YesNo,
+                MessageBoxIcon.Warning,
                 MessageBoxDefaultButton.Button2);
             if (dr == DialogResult.Yes)
             {
@@ -79,7 +94,7 @@ namespace KafeKod
                 siparis.KapanisZamani = DateTime.Now;
                 Close();
             }
-            
+
         }
 
         private void btnMasaOdemeAl_Click(object sender, EventArgs e)
@@ -96,5 +111,65 @@ namespace KafeKod
                 Close();
             }
         }
+
+        private void dgvSiparisDetaylari_MouseClick(object sender, MouseEventArgs e)
+        {
+            if (e.Button == MouseButtons.Right)
+            {
+                int satirIndex = dgvSiparisDetaylari.HitTest(e.X, e.Y).RowIndex;
+                if (satirIndex > -1)
+                {
+                    dgvSiparisDetaylari.ClearSelection();
+                    dgvSiparisDetaylari.Rows[satirIndex].Selected = true;
+                    cmsSiparisDetay.Show(MousePosition); //MousePosition yerine Cursor.Position kullanabiliriz.
+                }
+
+
+            }
+        }
+
+        private void tsmSiparisDetaySil_Click(object sender, EventArgs e)
+        {
+            if (dgvSiparisDetaylari.SelectedRows.Count > 0)
+            {
+                var seciliSatir = dgvSiparisDetaylari.SelectedRows[0];
+                var sipDetay = (SiparisDetay)seciliSatir.DataBoundItem;
+                blSiparisDetaylar.Remove(sipDetay);
+            }
+
+            TutarGuncelle();
+        }
+
+        private void btnMasaTasi_Click(object sender, EventArgs e)
+        {
+            if (cboMasaNo.SelectedItem == null)
+            {
+                MessageBox.Show("Lütfen hedef masa noyu seçiniz.");
+                return;
+            }
+
+            int eskiMasaNo = siparis.MasaNo;
+            int hedefMasa = (int)cboMasaNo.SelectedItem;
+            siparis.MasaNo = hedefMasa;
+            MasaNoGuncelle();
+            MasaNolariniYukle();
+            if (MasaTasindi != null)
+            {
+                var args = new MasaTasimaEventArgs
+                {
+                    TasinanSiparis = siparis,
+                    EskiMasaNo = eskiMasaNo,
+                    YeniMasaNo = hedefMasa
+                };
+                MasaTasindi(this, args);
+            }
+        }
+    }
+
+    public class MasaTasimaEventArgs : EventArgs
+    {
+        public Siparis TasinanSiparis { get; set; }
+        public int YeniMasaNo { get; set; }
+        public int EskiMasaNo { get; set; }
     }
 }

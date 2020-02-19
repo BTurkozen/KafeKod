@@ -1,9 +1,11 @@
 ﻿using KafeKod.Data;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -14,17 +16,29 @@ namespace KafeKod
     public partial class Form1 : Form
     {
         KafeVeri db;
-        int masaAdet = 20; // Masa adetini dinamik değiştirebilmek için burada tanımlıyoruz.
+      
         //KafeKod.Datayi referance/ addreferance/ oradan KafeKod.Datayi ekleyerek referans gösterebiliyoruz.
         
         public Form1()
         {
-            db = new KafeVeri();
-            OrnekVerileriYukle();
-            InitializeComponent();
-            
+            VerileriOku();
+            InitializeComponent();            
             MasalariOlustur();
 
+        }
+
+        private void VerileriOku()
+        {
+            try
+            {
+                string json = File.ReadAllText("veri.json");
+                db = JsonConvert.DeserializeObject<KafeVeri>(json);
+            }
+            catch (Exception)
+            {
+
+                db = new KafeVeri();
+            }
         }
 
         private void OrnekVerileriYukle()
@@ -35,6 +49,7 @@ namespace KafeKod
                 new Urun { UrunAd = "Ayran", BirimFiyat = 3.50m },
                 new Urun {UrunAd = "Çay", BirimFiyat = 4.00m}
             };
+            db.Urunler.Sort();
         }
 
         private void MasalariOlustur()
@@ -49,11 +64,22 @@ namespace KafeKod
 
             ListViewItem lvi;
 
-            for (int i = 1; i <= masaAdet; i++)
+            for (int i = 1; i <= db.MasaAdet; i++)
             {
                 lvi = new ListViewItem("Masa " + i); // lvi ile masa oluşturup i ile masaAdet kadar masa ekliyoruz.
-                lvi.Tag = i; // Tag'ini i seklinde oluşturuyoruz.
-                lvi.ImageKey = "bos"; // default degerini boş olarak alıyoruz.
+                //i masa no ile kayıtlı bir sipariş varmı 
+                Siparis sip = db.AktifSiparis.FirstOrDefault(x => x.MasaNo == i);
+
+                if (sip == null)
+                {
+                    lvi.Tag = 1;
+                    lvi.ImageKey = "bos";
+                }
+                else
+                {
+                    lvi.Tag = sip;
+                    lvi.ImageKey = "dolu";
+                }
                 lvwMasalar.Items.Add(lvi); // listviewimize lvi de oluşturdugumuz masalari ekliyoruz.
                 
                
@@ -83,8 +109,11 @@ namespace KafeKod
                     lvi.Tag = sip;
                     db.AktifSiparis.Add(sip);
                 }
+
                 MasaDetayForm frmSipraris = new MasaDetayForm(db, sip);
+                frmSipraris.MasaTasindi += FrmSipraris_MasaTasindi;
                 frmSipraris.ShowDialog();
+
                 if (sip.Durum != SiparisDurumu.Aktif)
                 {
                     lvi.Tag = sip.MasaNo;
@@ -95,10 +124,48 @@ namespace KafeKod
             }
         }
 
+        private void FrmSipraris_MasaTasindi(object sender, MasaTasimaEventArgs e)
+        {
+            //adım 1 Eski Masayi boşalt
+            ListViewItem lviEskiMasa = null;
+            foreach (ListViewItem item in lviMasalar.Items)
+            {
+                if (item.Tag == e.EskiMasaNo)
+                {
+                    lviEskiMasa = item;
+                    break;
+                }
+                lviEskiMasa.Tag = e.EskiMasaNo;
+                lviEskiMasa.ImageKey = "bos";
+            }
+
+
+           //adım 2 Yeni masaya sipariş koy.
+
+
+        }
+
         private void tsmiGecmisUrunler_Click(object sender, EventArgs e)
         {
             var frm = new GecmisSparislerForm(db);
             frm.ShowDialog();
+        }
+
+        private void tsmiUrunler_Click(object sender, EventArgs e)
+        {
+            var frm = new UrunlerForm(db);
+            frm.ShowDialog();
+        }
+
+        private void Form1_FormClosed(object sender, FormClosedEventArgs e)
+        {
+
+        }
+
+        private void Form1_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            string json = JsonConvert.SerializeObject(db);
+            File.WriteAllText("veri.json", json);
         }
     }
 }

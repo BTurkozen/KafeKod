@@ -19,5 +19,6 @@ namespace KafeKod.Data
         public  List<Urun> Urunler { get; set; }
         public List<Siparis> AktifSiparis { get; set; }
         public List<Siparis> GecmisSiparis { get; set; }
+        public int MasaAdet { get; set; } = 20;
     }
 }
