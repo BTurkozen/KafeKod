@@ -16,13 +16,13 @@ namespace KafeKod
     public partial class Form1 : Form
     {
         KafeVeri db;
-      
+
         //KafeKod.Datayi referance/ addreferance/ oradan KafeKod.Datayi ekleyerek referans gösterebiliyoruz.
-        
+
         public Form1()
         {
             VerileriOku();
-            InitializeComponent();            
+            InitializeComponent();
             MasalariOlustur();
 
         }
@@ -58,7 +58,7 @@ namespace KafeKod
             ImageList il = new ImageList(); // imagelist olarak oluşturuyoruz.
             il.Images.Add("bos", Properties.Resources.masabos); // boş ise resource deki nmasabos imageni alıyor
             il.Images.Add("dolu", Properties.Resources.masadolu); // dolu ise resource deki nmasadolu imageni alıyor
-            il.ImageSize = new Size(64,64); // Resimin sizeni 64,64 kare olarak oluşturuyoruz.
+            il.ImageSize = new Size(64, 64); // Resimin sizeni 64,64 kare olarak oluşturuyoruz.
             lvwMasalar.LargeImageList = il; //Resmi buyuk göstermek için kullanıyoruz. 
             #endregion
 
@@ -81,8 +81,8 @@ namespace KafeKod
                     lvi.ImageKey = "dolu";
                 }
                 lvwMasalar.Items.Add(lvi); // listviewimize lvi de oluşturdugumuz masalari ekliyoruz.
-                
-               
+
+
             }
         }
 
@@ -99,7 +99,7 @@ namespace KafeKod
                 Siparis sip;
                 if ((lvi.Tag is Siparis))
                 {
-                    sip = (Siparis)lvi.Tag;   
+                    sip = (Siparis)lvi.Tag;
                 }
                 else
                 {
@@ -111,7 +111,7 @@ namespace KafeKod
                 }
 
                 MasaDetayForm frmSipraris = new MasaDetayForm(db, sip);
-                frmSipraris.MasaTasindi += FrmSipraris_MasaTasindi;
+                frmSipraris.MasaTasiniyor += FrmSipraris_MasaTasindi;
                 frmSipraris.ShowDialog();
 
                 if (sip.Durum != SiparisDurumu.Aktif)
@@ -127,22 +127,15 @@ namespace KafeKod
         private void FrmSipraris_MasaTasindi(object sender, MasaTasimaEventArgs e)
         {
             //adım 1 Eski Masayi boşalt
-            ListViewItem lviEskiMasa = null;
-            foreach (ListViewItem item in lviMasalar.Items)
-            {
-                if (item.Tag == e.EskiMasaNo)
-                {
-                    lviEskiMasa = item;
-                    break;
-                }
+            ListViewItem lviEskiMasa = MasaBul(e.EskiMasaNo);
                 lviEskiMasa.Tag = e.EskiMasaNo;
                 lviEskiMasa.ImageKey = "bos";
-            }
-
-
-           //adım 2 Yeni masaya sipariş koy.
-
-
+  
+            //adım 2 Yeni masaya sipariş koy.
+            ListViewItem lviYeniMasa = MasaBul(e.YeniMasaNo);
+                lviYeniMasa.Tag = e.TasinanSiparis;
+                lviYeniMasa.ImageKey = "dolu";         
+      
         }
 
         private void tsmiGecmisUrunler_Click(object sender, EventArgs e)
@@ -156,16 +149,26 @@ namespace KafeKod
             var frm = new UrunlerForm(db);
             frm.ShowDialog();
         }
-
-        private void Form1_FormClosed(object sender, FormClosedEventArgs e)
-        {
-
-        }
-
         private void Form1_FormClosing(object sender, FormClosingEventArgs e)
         {
             string json = JsonConvert.SerializeObject(db);
             File.WriteAllText("veri.json", json);
         }
+        private ListViewItem MasaBul(int masaNo)
+        {
+            foreach (ListViewItem item in lvwMasalar.Items)
+            {
+                if (item.Tag is int && (int)item.Tag == masaNo)
+                {
+                    return item;
+                }
+                else if (item.Tag is Siparis && ((Siparis)item.Tag).MasaNo == masaNo)
+                {
+                    return item;
+                }
+            }
+            return null;
+        }
     }
+   
 }

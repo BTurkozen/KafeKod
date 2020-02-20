@@ -13,7 +13,7 @@ namespace KafeKod
 {
     public partial class MasaDetayForm : Form
     {
-        public event EventHandler<MasaTasimaEventArgs> MasaTasindi;
+        public event EventHandler<MasaTasimaEventArgs> MasaTasiniyor;
 
         KafeVeri db; // Constructer için field olusturuyoruz.
         Siparis siparis; // Constructer için field olusturuyoruz.
@@ -149,21 +149,23 @@ namespace KafeKod
             }
 
             int eskiMasaNo = siparis.MasaNo;
-            int hedefMasa = (int)cboMasaNo.SelectedItem;
-            siparis.MasaNo = hedefMasa;
-            MasaNoGuncelle();
-            MasaNolariniYukle();
-            if (MasaTasindi != null)
+            int hedefMasaNo = (int)cboMasaNo.SelectedItem;
+            
+            if (MasaTasiniyor != null)
             {
                 var args = new MasaTasimaEventArgs
                 {
                     TasinanSiparis = siparis,
                     EskiMasaNo = eskiMasaNo,
-                    YeniMasaNo = hedefMasa
+                    YeniMasaNo = hedefMasaNo
                 };
-                MasaTasindi(this, args);
+                MasaTasiniyor(this, args);
             }
+            siparis.MasaNo = hedefMasaNo;
+            MasaNoGuncelle();
+            MasaNolariniYukle();
         }
+         
     }
 
     public class MasaTasimaEventArgs : EventArgs
